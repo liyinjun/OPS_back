@@ -1,0 +1,343 @@
+import axios from 'axios/index'
+
+const API = {
+  /**
+  *内部租户
+  */
+  // 内部租户列表获取
+  INNER_USER_LISTPAGE: '/ops/api/inneruser/listpage',
+    /*参数：{
+        page: this.page,
+        accountEmail: this.filters.accountEmail
+      }
+      返回res{
+        code: 200,
+        total: total,
+        page_size: page_size,
+        users: []
+    }*/
+  // 内部租户列表用户删除
+  INNER_USER_REMOVE: '/ops/api/inneruser/remove',
+  /*参数：{id: id}
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 内部租户列表用户批量删除
+  INNER_USER_BATCHREMOVE: '/ops/api/inneruser/batchremove',
+  /*参数：
+      {ids: ids}  //id 的string串用,分割
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      未选中{'code': 404, 'msg': "请正确选择"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 内部租户列表编辑用户
+  INNER_USER_EDIT: '/ops/api/inneruser/edit',
+  /*参数：//editForm表单
+    {
+        id: '',
+        department: '',
+        programGroup: '',
+        accountEmail: '',
+        tenantName: '',
+        phoneNumber: '',
+        accountType: '',
+        applyReason: '',
+        uin: '',
+        appid: ''
+      }
+
+    无返回值*/
+  // 内部租户列表新增用户
+  INNER_USER_ADD: '/ops/api/inneruser/add',
+  /*参数：//addForm表单
+  {
+        department: '',
+        programGroup: '',
+        accountEmail: '',
+        tenantName: '',
+        phoneNumber: '',
+        accountType: '',
+        applyReason: '',
+        uin: '',
+        appid: ''
+      }
+
+    无返回值*/
+
+  /**
+  *外部租户
+  */
+  // 外部租户列表获取
+  OUTER_USER_LISTPAGE: '/ops/api/outeruser/listpage',
+  /*参数：{
+        page: this.page,
+        accountEmail: this.filters.accountEmail
+      }
+      返回res{
+        code: 200,
+        total: total,
+        page_size: page_size,
+        users: []
+    }*/
+  // 外部租户列表用户删除
+  OUTER_USER_REMOVE: '/ops/api/outeruser/remove',
+  /*参数：{id: id}
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 外部租户列表用户批量删除
+  OUTER_USER_BATCHREMOVE: '/ops/api/outeruser/batchremove',
+  /*参数：
+      {ids: ids}  //id 的string串用,分割
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      未选中{'code': 404, 'msg': "请正确选择"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 外部租户列表编辑用户
+  OUTER_USER_EDIT: '/ops/api/outeruser/edit',
+  /*参数：//editForm表单
+    {
+        id: '',
+        department: '',
+        programGroup: '',
+        accountEmail: '',
+        tenantName: '',
+        phoneNumber: '',
+        accountType: '',
+        applyReason: '',
+        uin: '',
+        appid: ''
+      }
+
+    无返回值*/
+  // 外部租户列表新增用户
+  OUTER_USER_ADD: '/ops/api/outeruser/add',
+  /*参数：//addForm表单
+  {
+        department: '',
+        programGroup: '',
+        accountEmail: '',
+        tenantName: '',
+        phoneNumber: '',
+        accountType: '',
+        applyReason: '',
+        uin: '',
+        appid: ''
+      }
+
+    无返回值*/
+
+  /**
+  *需求
+  */
+  // 需求列表获取
+  DEMAND_LISTPAGE: '/ops/api/demand/listpage',
+  // 需求列表用户删除
+  DEMAND_REMOVE: '/ops/api/demand/remove',
+  // 需求列表用户批量删除
+  DEMAND_BATCHREMOVE: '/ops/api/demand/batchremove',
+  // 需求列表编辑用户
+  DEMAND_EDIT: '/ops/api/demand/edit',
+  // 需求列表新增用户
+  DEMAND_ADD: '/ops/api/demand/add',
+
+  /**
+  *公有云服务服务输出
+  */
+  // 公有云服务目录表格获取
+  SERVER_EXPORT_LISTPAGE: '/ops/api/serverexport/listpage',
+  /*参数：{
+        page: this.page, 
+        filters: this.serverFilters, 
+        demandWay: this.demandWay
+      }
+      返回res{
+        code: 200,
+        total: total,
+        page_size: page_size,
+        serverStatistics: []
+    }*/
+  // 服务目录列表用户删除
+  SERVER_EXPORT_REMOVE: '/ops/api/serverexport/remove',
+  /*参数：{serverNum: serverNum}
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 服务目录列表用户批量删除
+  SERVER_EXPORT_BATCHREMOVE: '/ops/api/serverexport/batchremove',
+  /*参数：
+      { serverNums: serverNums }  //serverNum 的string串用,分割
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      未选中{'code': 404, 'msg': "请正确选择"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 服务目录列表编辑用户
+  SERVER_EXPORT_EDIT: '/ops/api/serverexport/edit',
+  /*参数：//editForm表单
+    {
+        serverNum: '',
+        serverDepartment: '',
+        serverOffice: '',
+        serverCategory: '',
+        serverIteamName: '',
+        serverMeasure: '',
+        serverUnitPrice: '',
+        serverScene: '',
+        serverContent: '',
+        serverProvideUser: '',
+        serverProvideUserEmail: '',
+        serverProvideUserPhone: ''
+      }
+
+    无返回值*/
+
+  // 服务目录列表新增用户
+  SERVER_EXPORT_ADD: '/ops/api/serverexport/add',
+  /*参数：//editForm表单
+    {
+        id: '',
+        serverDepartment: '',
+        serverOffice: '',
+        serverCategory: '',
+        serverIteamName: '',
+        serverMeasure: '',
+        serverUnitPrice: '',
+        serverScene: '',
+        serverContent: '',
+        serverProvideUser: '',
+        serverProvideUserEmail: '',
+        serverProvideUserPhone: ''
+      }
+
+    无返回值*/
+
+  /**
+  *公有云服务服务统计
+  */
+  // 公有云服务目录表格获取
+  SERVER_STATISTIC_LISTPAGE: '/ops/api/serverstatistics/listpage',
+  /*参数：{
+        page: this.page,
+        filters: this.serverFilters,
+        demandWay: this.demandWay
+      }
+      返回res{
+        code: 200,
+        total: total,
+        page_size: page_size,
+        serverStatistics: []
+    }*/
+  // 服务目录列表用户删除
+  SERVER_STATISTIC_REMOVE: '/ops/api/serverstatistics/remove',
+  /*参数：
+      { serverNum: serverNum }  
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      未选中{'code': 404, 'msg': "请正确选择"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 服务目录列表用户批量删除
+  SERVER_STATISTIC_BATCHREMOVE: '/ops/api/serverstatistics/batchremove',
+  /*参数：
+      { serverNums: serverNums }  //serverNum 的string串用,分割
+      成功返回res{'code': 200, 'msg': "删除成功"}
+      未选中{'code': 404, 'msg': "请正确选择"}
+      失败返回res{'code': 500, 'msg': "未知错误"}
+      */
+  // 服务目录列表编辑用户
+  SERVER_STATISTIC_EDIT: '/ops/api/serverstatistics/edit',
+  /*参数：//editForm表单
+    {
+        serverNum: '',
+        serverIteamName: '',
+        serverApplyDepartment: '',
+        serverApplyOffice: '',
+        serverDiscountRate: 0,
+        serverApplyCompany: '',
+        serverStartTime: '',
+        serverApplyUser: '',
+        serverApplyEmail: '',
+        serverApplyPhone: ''
+      },
+
+    无返回值*/
+  // 服务目录列表新增用户
+  SERVER_STATISTIC_ADD: '/ops/api/serverstatistics/add',
+  /*参数：//addForm表单
+    {
+        serverNum: '',
+        serverIteamName: '',
+        serverApplyDepartment: '',
+        serverApplyOffice: '',
+        serverDiscountRate: 0,
+        serverApplyCompany: '',
+        serverStartTime: '',
+        serverApplyUser: '',
+        serverApplyEmail: '',
+        serverApplyPhone: ''
+      },
+
+    无返回值*/
+  // 通过number查询name
+  SERVER_STATISTIC_SERVERITEAMNAME_BY_NUMBER: '/ops/api/serverstatistics/ServerIteamNameByNum',
+  /*参数：//addForm表单
+    {serverNum: this.addForm.serverNum},
+
+    返回值{
+          'code': 200,
+          'msg': "查询成功",
+          'serverIteamName': resultIteamName
+          }
+        */
+  
+  /**
+  *图标信息
+  */
+  //获取按所属领域统计产品的数据belongFieldData
+  DASHBOARD_BELONG_FIELD_DATA: '/ops/api/dashboard/belongFieldData',
+  /*参数：参数：无参
+    返回res{code:'',
+            belongFieldData: [
+              { value: 31, name: '金融服务' },
+              { value: 22, name: '行业应用' },
+              { value: 22, name: '安全' },
+              { value: 12, name: '通用服务' },
+              { value: 10, name: '网络' },
+              { value: 10, name: '计算' },
+              { value: 9, name: '运维' },
+              { value: 9, name: '存储' },
+              { value: 8, name: '数据库' },
+              { value: 8, name: '大数据' },
+              { value: 8, name: '平台应用' },
+              { value: 4, name: '金融风控' },
+              { value: 3, name: '人工智能' },
+              { value: 3, name: '视频' },
+            ]
+            },
+            msg: ''
+          }*/
+  //获取按所属部门统计产品的数据belongDepartmentData
+  DASHBOARD_BELONG_DEPARTMENT_DATA: '/ops/api/dashboard/belongDepartmentData',
+  /*参数：无参
+    返回res{code:'',
+            belongFieldData: [
+              { value: 31, name: '金融服务' },
+              { value: 22, name: '行业应用' },
+              { value: 22, name: '安全' },
+              { value: 12, name: '通用服务' },
+              { value: 10, name: '网络' },
+              { value: 10, name: '计算' },
+              { value: 9, name: '运维' },
+              { value: 9, name: '存储' },
+              { value: 8, name: '数据库' },
+              { value: 8, name: '大数据' },
+              { value: 8, name: '平台应用' },
+              { value: 4, name: '金融风控' },
+              { value: 3, name: '人工智能' },
+              { value: 3, name: '视频' },
+            ]
+            },
+            msg: ''
+          }*/
+
+}
+
